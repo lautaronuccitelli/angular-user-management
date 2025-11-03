@@ -1,0 +1,11 @@
+<div>
+  <input [(ngModel)]="nombre" placeholder="Nombre del alumno">
+  <button (click)="agregarAlumno()">Agregar</button>
+</div>
+
+<ul>
+  <li *ngFor="let alumno of alumnos; let i = index">
+    {{ alumno }}
+    <button (click)="eliminarAlumno(i)">X</button>
+  </li>
+</ul>

@@ -1,0 +1,5 @@
+.container { max-width: 900px; margin: 20px auto; padding: 10px; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+input { width: 100%; padding: 6px; margin: 6px 0; }
+button { padding: 6px 10px; margin-right: 6px; }
