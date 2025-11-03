@@ -1,11 +1,44 @@
-<div>
-  <input [(ngModel)]="nombre" placeholder="Nombre del alumno">
-  <button (click)="agregarAlumno()">Agregar</button>
-</div>
+<div class="main-container">
+  <div class="lista-container">
+    <h1>Lista de Alumnos</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Curso</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of alumnos">
+          <td>{{ a.id }}</td>
+          <td>{{ a.Nombre }}</td>
+          <td>{{ a.Apellido }}</td>
+          <td>{{ a.Curso }}</td>
+          <td><button (click)="cargarParaEditar(a)">Editar</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<ul>
-  <li *ngFor="let alumno of alumnos; let i = index">
-    {{ alumno }}
-    <button (click)="eliminarAlumno(i)">X</button>
-  </li>
-</ul>
+  <div class="form-container">
+    <h2>Agregar Alumno</h2>
+    <input [(ngModel)]="nuevo.Nombre" placeholder="Nombre" /><br />
+    <input [(ngModel)]="nuevo.Apellido" placeholder="Apellido" /><br />
+    <input [(ngModel)]="nuevo.Curso" placeholder="Curso" /><br />
+    <button (click)="add()">Agregar Alumno</button>
+
+    <h2>Modificar Alumno</h2>
+    <input [(ngModel)]="edit.id" placeholder="ID del alumno" /><br />
+    <input [(ngModel)]="edit.Nombre" placeholder="Nuevo nombre" /><br />
+    <input [(ngModel)]="edit.Apellido" placeholder="Nuevo apellido" /><br />
+    <input [(ngModel)]="edit.Curso" placeholder="Nuevo curso" /><br />
+    <button (click)="update()">Modificar</button>
+
+    <h2>Eliminar Alumno</h2>
+    <input [(ngModel)]="deleteId" placeholder="ID del alumno" />
+    <button (click)="delete()">Eliminar</button>
+  </div>
+</div>
