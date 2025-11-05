@@ -1,81 +1,64 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AlumnosService } from './alumnos.service';
+import { FormsModule } from '@angular/forms'; 
+import { AlumnosService, Alumno } from './alumnos.service';
 
 @Component({
   selector: 'app-alumnos',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './alumnos.component.html',
-  styleUrls: ['./alumnos.component.css'],
-  providers: [AlumnosService]
+  styleUrls: ['./alumnos.component.css']
 })
-export class AlumnosComponent {
-  alumnos: any[] = [];
-  nuevo = { Nombre: '', Apellido: '', Curso: '' };
-  edit = { id: '', Nombre: '', Apellido: '', Curso: '' };
-  deleteId = '';
+export class AlumnosComponent implements OnInit {
+  list: Alumno[] = [];
+  showModal = false;
+  editItem: Alumno | null = null;
+  temp: Alumno = { nombre: '', edad: 0, curso: '', telefono: '' };
 
-  constructor(private servicio: AlumnosService) {}
+  constructor(private srv: AlumnosService) {}
 
   ngOnInit() {
-    this.getAll();
-  }
-
-  getAll() {
-    this.servicio.getAll().subscribe({
-      next: (data) => (this.alumnos = data),
-      error: () => alert('Error al cargar alumnos')
+    this.srv.data$.subscribe(d => {
+      // Validamos los nulls y agregamos nombre por defecto
+      this.list = d.map((a, i) => ({
+        ...a,
+        nombre: a.nombre || `Alumno ${i + 1}`,
+        curso: a.curso || 'Sin curso',
+        telefono: a.telefono || '0000000000',
+        edad: a.edad || 0
+      }));
     });
+    this.srv.load();
   }
 
-  add() {
-    if (!this.nuevo.Nombre || !this.nuevo.Apellido || !this.nuevo.Curso) {
-      alert('Faltan datos');
-      return;
-    }
-    this.servicio.add(this.nuevo).subscribe({
-      next: () => {
-        alert('Alumno agregado');
-        this.getAll();
-        this.nuevo = { Nombre: '', Apellido: '', Curso: '' };
-      },
-      error: () => alert('Error al agregar')
-    });
+  openModal(item?: Alumno) {
+    this.editItem = item || null;
+    this.temp = item ? { ...item } : { nombre: '', edad: 0, curso: '', telefono: '' };
+    this.showModal = true;
   }
 
-  update() {
-    if (!this.edit.id || !this.edit.Nombre || !this.edit.Apellido || !this.edit.Curso) {
-      alert('Faltan datos');
-      return;
-    }
-    this.servicio.update(this.edit.id, this.edit).subscribe({
-      next: () => {
-        alert('Alumno modificado');
-        this.getAll();
-        this.edit = { id: '', Nombre: '', Apellido: '', Curso: '' };
-      },
-      error: () => alert('Error al modificar')
-    });
+  closeModal() {
+    this.showModal = false;
   }
 
-  delete() {
-    if (!this.deleteId) {
-      alert('Falta el ID');
-      return;
-    }
-    this.servicio.delete(this.deleteId).subscribe({
-      next: () => {
-        alert('Alumno eliminado');
-        this.getAll();
-        this.deleteId = '';
-      },
-      error: () => alert('Error al eliminar')
-    });
+  save() {
+    if (!this.validate(this.temp)) return;
+
+    if (this.editItem) this.srv.update(this.temp);
+    else this.srv.add(this.temp);
+    this.closeModal();
   }
 
-  cargarParaEditar(alumno: any) {
-    this.edit = { ...alumno };
+  validate(a: Alumno): boolean {
+    if (!a.nombre.trim()) return alert("El nombre es obligatorio"), false;
+    if (a.edad <= 0 || a.edad > 120) return alert("Edad invalida"), false;
+    if (!a.curso.trim()) return alert("El curso es obligatorio"), false;
+    if (!/^[0-9]{7,15}$/.test(a.telefono)) return alert("Telefono invalido (solo numeros, 7 a 15 digitos)"), false;
+    return true;
+  }
+
+  delete(id: string) {
+    this.srv.delete(id);
   }
 }

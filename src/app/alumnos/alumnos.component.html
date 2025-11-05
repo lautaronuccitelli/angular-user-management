@@ -1,44 +1,55 @@
-<div class="main-container">
-  <div class="lista-container">
-    <h1>Lista de Alumnos</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Curso</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let a of alumnos">
-          <td>{{ a.id }}</td>
-          <td>{{ a.Nombre }}</td>
-          <td>{{ a.Apellido }}</td>
-          <td>{{ a.Curso }}</td>
-          <td><button (click)="cargarParaEditar(a)">Editar</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<h2>Gestion de Alumnos</h2>
 
-  <div class="form-container">
-    <h2>Agregar Alumno</h2>
-    <input [(ngModel)]="nuevo.Nombre" placeholder="Nombre" /><br />
-    <input [(ngModel)]="nuevo.Apellido" placeholder="Apellido" /><br />
-    <input [(ngModel)]="nuevo.Curso" placeholder="Curso" /><br />
-    <button (click)="add()">Agregar Alumno</button>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Edad</th>
+      <th>Curso</th>
+      <th>Telefono</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let a of list; let i = index">
+      <td>{{ a.id }}</td>
+      <td>{{ a.nombre || 'Alumno ' + (i + 1) }}</td>
+      <td>{{ a.edad }}</td>
+      <td>{{ a.curso }}</td>
+      <td>{{ a.telefono }}</td>
+      <td>
+        <button (click)="openModal(a)">Editar</button>
+        <button (click)="delete(a.id!)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-    <h2>Modificar Alumno</h2>
-    <input [(ngModel)]="edit.id" placeholder="ID del alumno" /><br />
-    <input [(ngModel)]="edit.Nombre" placeholder="Nuevo nombre" /><br />
-    <input [(ngModel)]="edit.Apellido" placeholder="Nuevo apellido" /><br />
-    <input [(ngModel)]="edit.Curso" placeholder="Nuevo curso" /><br />
-    <button (click)="update()">Modificar</button>
+<button (click)="openModal()">Agregar</button>
 
-    <h2>Eliminar Alumno</h2>
-    <input [(ngModel)]="deleteId" placeholder="ID del alumno" />
-    <button (click)="delete()">Eliminar</button>
+<div *ngIf="showModal" class="modal">
+  <div class="modal-content">
+    <h3>{{ editItem ? 'Editar Alumno' : 'Nuevo Alumno' }}</h3>
+
+    <label *ngIf="editItem">ID</label>
+    <input *ngIf="editItem" [(ngModel)]="temp.id" readonly>
+
+    <label>Nombre</label>
+    <input [(ngModel)]="temp.nombre" placeholder="Nombre del alumno">
+
+    <label>Edad</label>
+    <input type="number" [(ngModel)]="temp.edad" placeholder="Edad">
+
+    <label>Curso</label>
+    <input [(ngModel)]="temp.curso" placeholder="Curso">
+
+    <label>Telefono</label>
+    <input [(ngModel)]="temp.telefono" placeholder="Ej: 1122334455">
+
+    <div class="modal-actions">
+      <button (click)="save()">Guardar</button>
+      <button (click)="closeModal()">Cancelar</button>
+    </div>
   </div>
 </div>

@@ -1,14 +1,11 @@
-import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AlumnosComponent } from './alumnos/alumnos.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [AlumnosComponent, HttpClientModule],
-  template: `
-    <h1>Gestion de Alumnos</h1>
-    <app-alumnos></app-alumnos>
-  `
+  imports: [CommonModule, AlumnosComponent],
+  template: `<app-alumnos></app-alumnos>`,
 })
-export class AppComponent { }
+export class AppComponent {}
