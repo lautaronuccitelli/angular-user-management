@@ -20,7 +20,7 @@ export class AlumnosComponent implements OnInit {
 
   ngOnInit() {
     this.srv.data$.subscribe(d => {
-      // Validamos los nulls y agregamos nombre por defecto
+
       this.list = d.map((a, i) => ({
         ...a,
         nombre: a.nombre || `Alumno ${i + 1}`,
